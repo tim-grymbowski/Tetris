@@ -1,2 +1,2 @@
 # Tetris
-A Tetris clone, not completely true to the official guidelines.
+A Tetris clone, not completely true to the official guidelines. Still WIP.
