@@ -75,15 +75,13 @@ def valid(c, x, y, r):
                     return False
     return True
 
-# ----------------------------------------------- take care of this
+# (Used if not isSelected)
+# Can be used as score += clearAnyLines(grid) * 10 if clearAnyLines(grid) < 4 else clearAnyLines(grid) * 40
 def clearAnyLines(grid):
-    """
-    (Used if not isSelected)
-    Can be used as score += clearAnyLines(grid) * 10 if clearAnyLines(grid) < 4 else clearAnyLines(grid) * 40
-
-    Is the algorithm below "correct" ?
-
+    # either display new score (or keep old score) at the end or after or outside the conditional
     y = current_piece.y
+    # play around with these values
+    m = 6, n = 6
     filled_rows = []
     for v in range(4):
         isFilled = True
@@ -91,23 +89,21 @@ def clearAnyLines(grid):
             if grid[y + v][w] == 0:
                 isFilled = False
         if isFilled:
-            filled_rows.append(v)
-    
+            filled_rows.append(y + v)
+
     for row in filled_rows:
         grid[row] = [0 for _ in range(width)]
 
         pg.time.delay(400)
-        win.blit((0, 0, 0), rect, 0)
+        win.blit((0, 0, 0), (m, n + grid.index(row) * block_size, m + width * block_size - 1, n + (grid.index(row) + 1) * block_size - 1), 0)
         pg.display.update()
-        grid.remove(grid[row])
-        grid.insert((some function of filled_rows.index(row), len(filled_rows), maybe height), [0 for _ in range(width)])
+        grid.remove(grid[filled_rows[len(filled_rows) - 1 - filled_rows.index(row)]])
+        grid.insert(0, [0 for _ in range(width)])
 
     win.blit((0, 0, 0), rect, 0)
     pg.display.update()
 
     return len(filled_rows)
-    """
-    pass
 
 def isGameOver(grid):
     for u in range(4):
@@ -117,20 +113,14 @@ def isGameOver(grid):
     return False
 
 def drawGrid(win, c, grid):
-
-    """
-    What is still not clear is what to use for rect, respectively.
-    """
-
+    # either call pg.display.update at the end or after
     for h in len(grid):
         for w in len(h):
             u, v = w - x, h - y
             if u in range(4) and v in range(4):
-                # rect == ?
-                win.blit(color((c.shape)[rotate(u, v, r)]), rect, 0)
+                win.blit(color((c.shape)[rotate(u, v, r)]), (w * block_size, h * block_size, (w + 1) * block_size - 1, (h + 1) * block_size - 1), 0)
             else:
-                # rect == ?
-                win.blit(color(grid[h][w]), rect, 0)   
+                win.blit(color(grid[h][w]), (w * block_size, h * block_size, (w + 1) * block_size - 1, (h + 1) * block_size - 1), 0)   
 
 # ----------------------------------------------- still somewhat of a mystery
 def main(win):
