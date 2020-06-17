@@ -77,11 +77,11 @@ def valid(c, x, y, r):
 
 # (Used if not isSelected)
 # Can be used as score += clearAnyLines(grid) * 10 if clearAnyLines(grid) < 4 else clearAnyLines(grid) * 40
-def clearAnyLines(grid):
+def clearAnyLines(grid, current_piece):
     # either display new score (or keep old score) at the end or after or outside the conditional
     y = current_piece.y
     # play around with these values
-    m = 6, n = 6
+    m, n = 6, 6
     filled_rows = []
     for v in range(4):
         isFilled = True
@@ -95,12 +95,12 @@ def clearAnyLines(grid):
         grid[row] = [0 for _ in range(width)]
 
         pg.time.delay(400)
-        win.blit((0, 0, 0), (m, n + grid.index(row) * block_size, m + width * block_size - 1, n + (grid.index(row) + 1) * block_size - 1), 0)
+        pg.draw.rect(win, (0, 0, 0), (m, n + grid.index(row) * block_size, m + width * block_size - 1, n + (grid.index(row) + 1) * block_size - 1), 0)
         pg.display.update()
         grid.remove(grid[filled_rows[len(filled_rows) - 1 - filled_rows.index(row)]])
         grid.insert(0, [0 for _ in range(width)])
 
-    win.blit((0, 0, 0), rect, 0)
+    pg.draw.rect(win, (0, 0, 0), (m, n, m + width * block_size - 1, n + 4 * block_size - 1), 0)
     pg.display.update()
 
     return len(filled_rows)
@@ -114,15 +114,18 @@ def isGameOver(grid):
 
 def drawGrid(win, c, grid):
     # either call pg.display.update at the end or after
-    for h in len(grid):
-        for w in len(h):
+    x, y, r = c.x, c.y, c.r
+    for h in range(height):
+        for w in range(width):
             u, v = w - x, h - y
             if u in range(4) and v in range(4):
-                win.blit(color((c.shape)[rotate(u, v, r)]), (w * block_size, h * block_size, (w + 1) * block_size - 1, (h + 1) * block_size - 1), 0)
+                pg.draw.rect(win, colors((c.shape)[rotate(u, v, r)]), (w * block_size, h * block_size, (w + 1) * block_size - 1, (h + 1) * block_size - 1), 0)
             else:
-                win.blit(color(grid[h][w]), (w * block_size, h * block_size, (w + 1) * block_size - 1, (h + 1) * block_size - 1), 0)   
+                pg.draw.rect(win, colors(grid[h][w]), (w * block_size, h * block_size, (w + 1) * block_size - 1, (h + 1) * block_size - 1), 0)   
 
 # ----------------------------------------------- still somewhat of a mystery
+
+# maybe just use size_x, size_y for dimensions (for rect)?
 def main(win):
     run = True
     clock = pg.time.Clock()
@@ -147,17 +150,16 @@ def main(win):
                         y = current_piece.y; x = current_piece.x; r = current_piece.r
                         grid[y + v][x + u] = (current_piece.shape)[rotate(u, v, r)] if (current_piece.shape)[rotate(u, v, r)] else grid[y + v][x + u]
             
-            # not sure if this should go here or after calling isGameOver
-            clearAnyLines(grid) 
+            clearAnyLines(grid, current_piece) 
+
+            if not isSelected:
+                current_piece = Tetromino(3, 0, 0)
+                isSelected = True
 
             if isGameOver(grid):
                 run = False
                 # just for now, we'll find a better way later
                 sys.exit()
-
-            if not isSelected:
-                current_piece = Tetromino(3, 0, 0)
-                isSelected = True
 
             drawGrid(win, current_piece, grid)
 
