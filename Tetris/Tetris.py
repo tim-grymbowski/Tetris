@@ -121,7 +121,7 @@ def drawGrid(win, c, grid):
 
 def main(win):
     run = True
-    #pg.mixer.music.play(loops = -1)
+    pg.mixer.music.play(loops = -1)
     time_tick = 0.7
     t0 = time.time()
     isSelected = True
@@ -164,7 +164,7 @@ def main(win):
 
             if isGameOver(grid):
                 run = False
-                #pg.mixer.music.stop()
+                pg.mixer.music.stop()
                 sys.exit()
 
             drawGrid(win, current_piece, grid)
@@ -172,7 +172,7 @@ def main(win):
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                #pg.mixer.music.stop()
+                pg.mixer.music.stop()
                 run = False
                 sys.exit()
 
