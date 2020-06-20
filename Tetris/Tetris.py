@@ -89,10 +89,13 @@ def clearAnyLines(grid, current_piece):
             filled_rows.append(y + v)
 
     for row in filled_rows:
-        grid[row] = [0 for _ in range(width)]
+        b_row = filled_rows[len(filled_rows) - 1 - filled_rows.index(row)]
+        
+        grid[b_row + filled_rows.index(row)] = [0 for _ in range(width)]
         pg.draw.rect(win, (0, 0, 0), (m, n + row * block_size, m + width * block_size - 1, n + (row + 1) * block_size - 1), 0)
         pg.display.update()
-        del grid[filled_rows[len(filled_rows) - 1 - filled_rows.index(row)]]
+        
+        del grid[b_row + filled_rows.index(row)]
         grid.insert(0, [0 for _ in range(width)])
 
     return len(filled_rows)
@@ -118,7 +121,7 @@ def drawGrid(win, c, grid):
 
 def main(win):
     run = True
-    pg.mixer.music.play(loops = -1)
+    #pg.mixer.music.play(loops = -1)
     time_tick = 0.7
     t0 = time.time()
     isSelected = True
@@ -161,7 +164,7 @@ def main(win):
 
             if isGameOver(grid):
                 run = False
-                pg.mixer.music.stop()
+                #pg.mixer.music.stop()
                 sys.exit()
 
             drawGrid(win, current_piece, grid)
@@ -169,7 +172,7 @@ def main(win):
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                pg.mixer.music.stop()
+                #pg.mixer.music.stop()
                 run = False
                 sys.exit()
 
