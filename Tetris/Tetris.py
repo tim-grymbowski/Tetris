@@ -113,7 +113,7 @@ def drawGrid(win, c, grid):
     for h in range(height):
         for w in range(width):
             u, v = w - x, h - y
-            if u in range(4) and v in range(4):
+            if u in range(4) and v in range(4) and colors((c.shape)[rotate(u, v, r)]) != (0, 0, 0):
                 pg.draw.rect(win, colors((c.shape)[rotate(u, v, r)]), (m + w * block_size, n + h * block_size, m + (w + 1) * block_size - 1, n + (h + 1) * block_size - 1), 0)
             else:
                 pg.draw.rect(win, colors(str(grid[h][w])), (m + w * block_size, n + h * block_size, m + (w + 1) * block_size - 1, n + (h + 1) * block_size - 1), 0)   
