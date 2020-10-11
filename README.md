@@ -1,2 +1,2 @@
 # Tetris
-Old project. Built in Python.
+Old project. Built with Python.
